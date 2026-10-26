@@ -109,7 +109,13 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
         }),
       });
 
-      const data = await response.json();
+      const textResponse = await response.text();
+      let data: any;
+      try {
+        data = JSON.parse(textResponse);
+      } catch {
+        throw new Error('Sunucu API servisine ulaşılamadı. Vercel projenize güncel GitHub kodlarını yüklediğinizden ve Settings > Environment Variables bölümüne GEMINI_API_KEY eklediğinizden emin olun.');
+      }
 
       if (!response.ok || !data.success) {
         throw new Error(data.error || 'Yapay zeka yanıt veremedi.');
