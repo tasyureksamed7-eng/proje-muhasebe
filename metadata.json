@@ -1,0 +1,6 @@
+{
+  "name": "Borç & Bütçe Asistanı",
+  "description": "Ödeyebileceğiniz tutar ve borcunuza göre %20 asgari ve %40 hızlı ödeme stratejilerini karşılaştıran, yapay zeka destekli akıllı borç kapatma asistanı.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
