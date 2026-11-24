@@ -47,11 +47,20 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const shouldScrollChatRef = useRef<boolean>(false);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!shouldScrollChatRef.current) return;
+    const container = chatContainerRef.current;
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+    shouldScrollChatRef.current = false;
   }, [messages, isLoading]);
 
   useEffect(() => {
@@ -84,6 +93,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
     };
 
     const updatedMessages = [...messages, userMessage];
+    shouldScrollChatRef.current = true;
     setMessages(updatedMessages);
     setInputText('');
     setIsLoading(true);
@@ -128,6 +138,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
         timestamp: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
       };
 
+      shouldScrollChatRef.current = true;
       setMessages((prev) => [...prev, botMessage]);
     } catch (err: any) {
       console.error(err);
@@ -200,7 +211,10 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
       </div>
 
       {/* Chat Messages */}
-      <div className="p-4 sm:p-5 space-y-3 min-h-[280px] max-h-[460px] overflow-y-auto bg-gray-50/40">
+      <div
+        ref={chatContainerRef}
+        className="p-4 sm:p-5 space-y-3 min-h-[280px] max-h-[460px] overflow-y-auto bg-gray-50/40"
+      >
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
@@ -274,7 +288,6 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
           </div>
         )}
 
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
