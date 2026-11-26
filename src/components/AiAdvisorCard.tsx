@@ -196,7 +196,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
           {parts.map((part, j) => {
             if (part.startsWith('**') && part.endsWith('**')) {
               return (
-                <strong key={j} className="font-semibold text-white">
+                <strong key={j} className="font-semibold text-zinc-950 dark:text-white">
                   {part.slice(2, -2)}
                 </strong>
               );
@@ -209,12 +209,12 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
   };
 
   return (
-    <section id="danisman" className="bg-[#111118] border border-zinc-800/90 rounded-xl p-4 sm:p-6 space-y-4">
-      <div className="border-b border-zinc-800 pb-4">
-        <h2 className="text-lg font-bold text-white tracking-tight">
+    <section id="danisman" className="bg-white dark:bg-[#111118] border border-zinc-200 dark:border-zinc-800/90 rounded-xl p-4 sm:p-6 space-y-4 transition-colors">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-4">
+        <h2 className="text-lg font-bold text-zinc-950 dark:text-white tracking-tight">
           Yapay Zekâ Finans Danışmanı
         </h2>
-        <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
           Yalnızca yukarıdaki hesaplama motorunuzun ürettiği gerçek veriler üzerinden yorum yapar; hayali faiz veya tasarruf üretmez.
         </p>
       </div>
@@ -227,7 +227,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
             type="button"
             disabled={isLoading}
             onClick={() => handleSend(q)}
-            className="px-3 py-1.5 text-xs font-medium text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/60 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-left"
+            className="px-3 py-1.5 text-xs font-medium text-zinc-800 dark:text-zinc-200 bg-zinc-50 dark:bg-[#09090e] hover:bg-zinc-100 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-violet-500/60 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-left"
           >
             {q}
           </button>
@@ -237,7 +237,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
       {/* Chat Messages Area */}
       <div
         ref={chatContainerRef}
-        className="h-80 sm:h-96 overflow-y-auto border border-zinc-800 rounded-lg bg-[#08080c] p-3.5 sm:p-4 space-y-3"
+        className="h-80 sm:h-96 overflow-y-auto border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-[#08080c] p-3.5 sm:p-4 space-y-3"
       >
         {messages.map((msg) => (
           <div
@@ -252,14 +252,14 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
             <div
               className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm space-y-1 ${
                 msg.role === 'user'
-                  ? 'bg-white text-zinc-950 font-medium'
-                  : 'bg-[#13131c] border border-zinc-800 text-zinc-200'
+                  ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-medium'
+                  : 'bg-white dark:bg-[#13131c] border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200'
               }`}
             >
               {msg.role === 'user' ? <p>{msg.text}</p> : renderFormattedText(msg.text)}
             </div>
             {msg.role === 'user' && (
-              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-7 h-7 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 flex items-center justify-center shrink-0 mt-0.5">
                 <User className="w-4 h-4" />
               </div>
             )}
@@ -267,7 +267,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
         ))}
 
         {isLoading && (
-          <div className="flex items-center gap-2 text-xs text-violet-300">
+          <div className="flex items-center gap-2 text-xs text-violet-700 dark:text-violet-300">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Motor verileriniz analiz ediliyor...</span>
           </div>
@@ -288,7 +288,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Borç planınız hakkında bir soru sorun..."
           disabled={isLoading}
-          className="flex-1 px-3.5 py-2.5 text-sm text-white bg-[#09090e] border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 placeholder:text-zinc-500 min-h-[44px]"
+          className="flex-1 px-3.5 py-2.5 text-sm text-zinc-950 dark:text-white bg-zinc-50 dark:bg-[#09090e] border border-zinc-300 dark:border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-600 dark:focus:border-violet-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-h-[44px]"
         />
         <button
           type="submit"

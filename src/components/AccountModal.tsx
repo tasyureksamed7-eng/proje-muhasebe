@@ -81,22 +81,22 @@ export const AccountModal: React.FC<AccountModalProps> = ({
   const paidLogs = Object.values(activeProfile.actualLogs).filter((l) => l.isPaid);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
-      <div className="bg-[#111118] border border-zinc-800 rounded-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
+      <div className="bg-white dark:bg-[#111118] border border-zinc-200 dark:border-zinc-800 rounded-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
         {/* Modal Header */}
-        <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-white">
+            <h2 className="text-base sm:text-lg font-bold text-zinc-950 dark:text-white">
               Profiller, Kayıtlı Planlar ve Veri Yönetimi
             </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
               Verileriniz tarayıcınızda yerel olarak saklanır; JSON yedeğiyle cihazlar arası taşıyabilirsiniz.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-white rounded-lg cursor-pointer"
+            className="p-2 text-zinc-400 hover:text-zinc-950 dark:hover:text-white rounded-lg cursor-pointer"
             aria-label="Kapat"
           >
             <X className="w-5 h-5" />
@@ -106,12 +106,12 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         {/* Scrollable Content */}
         <div className="p-5 overflow-y-auto space-y-6">
           {statusNote && (
-            <div className="p-3 rounded-lg bg-violet-950/40 border border-violet-500/40 text-xs text-violet-200 flex items-center justify-between">
+            <div className="p-3 rounded-lg bg-violet-50 dark:bg-violet-950/40 border border-violet-300 dark:border-violet-500/40 text-xs text-violet-900 dark:text-violet-200 flex items-center justify-between">
               <span>{statusNote}</span>
               <button
                 type="button"
                 onClick={() => setStatusNote(null)}
-                className="text-zinc-400 hover:text-white cursor-pointer"
+                className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white cursor-pointer"
               >
                 Kapat
               </button>
@@ -120,7 +120,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
 
           {/* 1. Local Profiles */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white">Kullanıcı Profilleri (Misafir & Kişisel)</h3>
+            <h3 className="text-sm font-semibold text-zinc-950 dark:text-white">Kullanıcı Profilleri (Misafir & Kişisel)</h3>
             <div className="flex flex-wrap gap-2">
               {profiles.map((p) => {
                 const isActive = p.id === activeProfile.id;
@@ -130,7 +130,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                     className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-xs sm:text-sm ${
                       isActive
                         ? 'bg-violet-600 text-white border-violet-500'
-                        : 'bg-[#09090e] text-zinc-300 border-zinc-800'
+                        : 'bg-zinc-100 dark:bg-[#09090e] text-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800'
                     }`}
                   >
                     <button
@@ -144,7 +144,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       <button
                         type="button"
                         onClick={() => onDeleteProfile(p.id)}
-                        className={`cursor-pointer ${isActive ? 'text-violet-200 hover:text-white' : 'text-zinc-500 hover:text-white'}`}
+                        className={`cursor-pointer ${isActive ? 'text-violet-200 hover:text-white' : 'text-zinc-400 hover:text-zinc-950 dark:hover:text-white'}`}
                         title="Profili sil"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -169,7 +169,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 value={newProfileName}
                 onChange={(e) => setNewProfileName(e.target.value)}
                 placeholder="Yeni profil adı (Örn: Ev Bütçesi)"
-                className="flex-1 px-3 py-2 text-sm text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 placeholder:text-zinc-500 min-h-[40px]"
+                className="flex-1 px-3 py-2 text-sm text-zinc-950 dark:text-white bg-zinc-50 dark:bg-[#09090e] border border-zinc-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-violet-600 dark:focus:border-violet-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-h-[40px]"
               />
               <button
                 type="submit"
@@ -182,8 +182,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
           </div>
 
           {/* 2. Save Current Plan & Saved Plans List */}
-          <div className="space-y-3 pt-4 border-t border-zinc-800">
-            <h3 className="text-sm font-semibold text-white">
+          <div className="space-y-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+            <h3 className="text-sm font-semibold text-zinc-950 dark:text-white">
               Kayıtlı Ödeme Planları ({activeProfile.savedPlans.length})
             </h3>
 
@@ -201,23 +201,23 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 value={planNameDraft}
                 onChange={(e) => setPlanNameDraft(e.target.value)}
                 placeholder="Plan adı (Örn: Kasım 2026 Çığ Planım)"
-                className="flex-1 px-3 py-2 text-sm text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 placeholder:text-zinc-500 min-h-[40px]"
+                className="flex-1 px-3 py-2 text-sm text-zinc-950 dark:text-white bg-zinc-50 dark:bg-[#09090e] border border-zinc-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-violet-600 dark:focus:border-violet-500 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 min-h-[40px]"
               />
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-zinc-950 bg-white hover:bg-zinc-200 rounded-lg cursor-pointer min-h-[40px]"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-zinc-950 hover:bg-zinc-800 dark:text-zinc-950 dark:bg-white dark:hover:bg-zinc-200 rounded-lg cursor-pointer min-h-[40px]"
               >
-                <BookmarkCheck className="w-4 h-4 text-violet-700" />
+                <BookmarkCheck className="w-4 h-4 text-violet-400 dark:text-violet-700" />
                 <span>Mevcut Planı Kaydet</span>
               </button>
             </form>
 
             {activeProfile.savedPlans.length === 0 ? (
-              <p className="text-xs text-zinc-400 py-2">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 py-2">
                 Henüz kaydedilmiş plan yok. Farklı strateji veya bütçe senaryolarını kaydedip yan yana karşılaştırabilirsiniz.
               </p>
             ) : (
-              <div className="divide-y divide-zinc-800 border border-zinc-800 rounded-lg bg-[#09090e]">
+              <div className="divide-y divide-zinc-200 dark:divide-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50 dark:bg-[#09090e]">
                 {activeProfile.savedPlans.map((plan) => {
                   const isCompared = compareIds.includes(plan.id);
                   return (
@@ -226,8 +226,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                       className="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs sm:text-sm"
                     >
                       <div className="min-w-0">
-                        <p className="font-semibold text-white truncate">{plan.name}</p>
-                        <p className="text-xs text-zinc-400 tabular-nums mt-0.5">
+                        <p className="font-semibold text-zinc-950 dark:text-white truncate">{plan.name}</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums mt-0.5">
                           {new Date(plan.createdAt).toLocaleDateString('tr-TR')} · Borç{' '}
                           {formatCurrencyTR(plan.summarySnapshot.totalDebt)} · Bütçe{' '}
                           {formatCurrencyTR(plan.monthlyBudget)} ·{' '}
@@ -242,7 +242,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                           className={`inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded border cursor-pointer ${
                             isCompared
                               ? 'bg-violet-600 text-white border-violet-500'
-                              : 'bg-[#111118] text-zinc-300 border-zinc-800 hover:border-violet-500/50'
+                              : 'bg-white dark:bg-[#111118] text-zinc-700 dark:text-zinc-300 border-zinc-300 dark:border-zinc-800 hover:border-violet-500/50'
                           }`}
                         >
                           <ArrowLeftRight className="w-3 h-3" />
@@ -254,14 +254,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                             onLoadPlan(plan);
                             onClose();
                           }}
-                          className="px-2.5 py-1.5 text-xs font-semibold text-zinc-950 bg-white hover:bg-zinc-200 rounded cursor-pointer"
+                          className="px-2.5 py-1.5 text-xs font-semibold text-white bg-zinc-950 hover:bg-zinc-800 dark:text-zinc-950 dark:bg-white dark:hover:bg-zinc-200 rounded cursor-pointer"
                         >
                           Yükle
                         </button>
                         <button
                           type="button"
                           onClick={() => onDeletePlan(plan.id)}
-                          className="p-1.5 text-zinc-500 hover:text-white cursor-pointer"
+                          className="p-1.5 text-zinc-400 dark:text-zinc-500 hover:text-zinc-950 dark:hover:text-white cursor-pointer"
                           title="Planı sil"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -274,36 +274,36 @@ export const AccountModal: React.FC<AccountModalProps> = ({
             )}
 
             {comparedPlans.length === 2 && (
-              <div className="bg-[#09090e] border border-violet-500/30 rounded-lg p-3.5 space-y-2">
-                <h4 className="text-xs font-bold text-violet-300 uppercase tracking-wider">
+              <div className="bg-zinc-50 dark:bg-[#09090e] border border-violet-300 dark:border-violet-500/30 rounded-lg p-3.5 space-y-2">
+                <h4 className="text-xs font-bold text-violet-700 dark:text-violet-300 uppercase tracking-wider">
                   Kayıtlı İki Plan Karşılaştırması
                 </h4>
                 <div className="grid grid-cols-3 gap-2 text-xs tabular-nums">
-                  <div className="font-semibold text-zinc-400">Kriter</div>
-                  <div className="font-bold text-white truncate">{comparedPlans[0].name}</div>
-                  <div className="font-bold text-white truncate">{comparedPlans[1].name}</div>
+                  <div className="font-semibold text-zinc-500 dark:text-zinc-400">Kriter</div>
+                  <div className="font-bold text-zinc-950 dark:text-white truncate">{comparedPlans[0].name}</div>
+                  <div className="font-bold text-zinc-950 dark:text-white truncate">{comparedPlans[1].name}</div>
 
-                  <div className="text-zinc-400">Aylık Bütçe</div>
-                  <div className="font-mono text-zinc-200">{formatCurrencyTR(comparedPlans[0].monthlyBudget)}</div>
-                  <div className="font-mono text-zinc-200">{formatCurrencyTR(comparedPlans[1].monthlyBudget)}</div>
+                  <div className="text-zinc-500 dark:text-zinc-400">Aylık Bütçe</div>
+                  <div className="font-mono text-zinc-800 dark:text-zinc-200">{formatCurrencyTR(comparedPlans[0].monthlyBudget)}</div>
+                  <div className="font-mono text-zinc-800 dark:text-zinc-200">{formatCurrencyTR(comparedPlans[1].monthlyBudget)}</div>
 
-                  <div className="text-zinc-400">Kapanış Süresi</div>
-                  <div className="font-mono text-zinc-200">{comparedPlans[0].summarySnapshot.monthsToPayoff} Ay</div>
-                  <div className="font-mono text-zinc-200">{comparedPlans[1].summarySnapshot.monthsToPayoff} Ay</div>
+                  <div className="text-zinc-500 dark:text-zinc-400">Kapanış Süresi</div>
+                  <div className="font-mono text-zinc-800 dark:text-zinc-200">{comparedPlans[0].summarySnapshot.monthsToPayoff} Ay</div>
+                  <div className="font-mono text-zinc-800 dark:text-zinc-200">{comparedPlans[1].summarySnapshot.monthsToPayoff} Ay</div>
 
-                  <div className="text-zinc-400">Toplam Faiz+Vergi</div>
-                  <div className="font-mono text-violet-300 font-semibold">
+                  <div className="text-zinc-500 dark:text-zinc-400">Toplam Faiz+Vergi</div>
+                  <div className="font-mono text-violet-700 dark:text-violet-300 font-semibold">
                     {formatCurrencyTR(comparedPlans[0].summarySnapshot.totalInterestAndTaxes)}
                   </div>
-                  <div className="font-mono text-violet-300 font-semibold">
+                  <div className="font-mono text-violet-700 dark:text-violet-300 font-semibold">
                     {formatCurrencyTR(comparedPlans[1].summarySnapshot.totalInterestAndTaxes)}
                   </div>
 
-                  <div className="text-zinc-400">Toplam Geri Ödeme</div>
-                  <div className="font-mono text-white font-semibold">
+                  <div className="text-zinc-500 dark:text-zinc-400">Toplam Geri Ödeme</div>
+                  <div className="font-mono text-zinc-950 dark:text-white font-semibold">
                     {formatCurrencyTR(comparedPlans[0].summarySnapshot.totalPaid)}
                   </div>
-                  <div className="font-mono text-white font-semibold">
+                  <div className="font-mono text-zinc-950 dark:text-white font-semibold">
                     {formatCurrencyTR(comparedPlans[1].summarySnapshot.totalPaid)}
                   </div>
                 </div>
@@ -312,16 +312,16 @@ export const AccountModal: React.FC<AccountModalProps> = ({
           </div>
 
           {/* 3. Payment History Summary */}
-          <div className="space-y-2 pt-4 border-t border-zinc-800">
-            <h3 className="text-sm font-semibold text-white">
+          <div className="space-y-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+            <h3 className="text-sm font-semibold text-zinc-950 dark:text-white">
               Ödeme Geçmişi Özeti ({paidLogs.length} İşaretli Ay)
             </h3>
             {paidLogs.length === 0 ? (
-              <p className="text-xs text-zinc-400">Henüz ödenmiş olarak işaretlenen bir ay bulunmuyor.</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Henüz ödenmiş olarak işaretlenen bir ay bulunmuyor.</p>
             ) : (
               <div className="flex flex-wrap gap-2 text-xs tabular-nums">
                 {paidLogs.map((l) => (
-                  <span key={l.month} className="px-2.5 py-1 bg-violet-950/40 text-violet-200 border border-violet-500/40 rounded">
+                  <span key={l.month} className="px-2.5 py-1 bg-violet-100 dark:bg-violet-950/40 text-violet-900 dark:text-violet-200 border border-violet-300 dark:border-violet-500/40 rounded">
                     {l.month}. Ay: {formatCurrencyTR(l.actualAmount ?? 0)}
                   </span>
                 ))}
@@ -330,14 +330,14 @@ export const AccountModal: React.FC<AccountModalProps> = ({
           </div>
 
           {/* 4. JSON Backup & Delete All Data */}
-          <div className="pt-4 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={onExportBackup}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 rounded-lg cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-[#09090e] hover:bg-zinc-200 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg cursor-pointer"
               >
-                <Download className="w-3.5 h-3.5 text-violet-400" />
+                <Download className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
                 <span>JSON Yedek İndir</span>
               </button>
 
@@ -351,9 +351,9 @@ export const AccountModal: React.FC<AccountModalProps> = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 rounded-lg cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-800 dark:text-zinc-200 bg-zinc-100 dark:bg-[#09090e] hover:bg-zinc-200 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg cursor-pointer"
               >
-                <Upload className="w-3.5 h-3.5 text-violet-400" />
+                <Upload className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
                 <span>Yedek Yükle</span>
               </button>
             </div>
@@ -363,15 +363,15 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setConfirmWipe(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-300 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-lg cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-[#09090e] hover:bg-zinc-200 dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-violet-500/50 rounded-lg cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Tüm Verileri Sil</span>
                 </button>
               ) : (
-                <div className="inline-flex items-center gap-2 bg-violet-950/40 border border-violet-500/50 px-3 py-1.5 rounded-lg text-xs">
-                  <AlertTriangle className="w-3.5 h-3.5 text-violet-300" />
-                  <span className="text-white font-medium">Emin misiniz?</span>
+                <div className="inline-flex items-center gap-2 bg-violet-50 dark:bg-violet-950/40 border border-violet-300 dark:border-violet-500/50 px-3 py-1.5 rounded-lg text-xs">
+                  <AlertTriangle className="w-3.5 h-3.5 text-violet-700 dark:text-violet-300" />
+                  <span className="text-zinc-950 dark:text-white font-medium">Emin misiniz?</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -386,7 +386,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setConfirmWipe(false)}
-                    className="px-2 py-1 text-zinc-300 hover:text-white cursor-pointer"
+                    className="px-2 py-1 text-zinc-600 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white cursor-pointer"
                   >
                     Vazgeç
                   </button>

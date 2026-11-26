@@ -34,6 +34,27 @@ export default function App() {
   const [store, setStore] = useState<ProfileStore>(() => loadProfileStore());
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('thoth_theme');
+      return saved === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    try {
+      localStorage.setItem('thoth_theme', theme);
+    } catch {
+      // ignore
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const activeProfile: UserProfile = useMemo(() => {
     return (
@@ -289,10 +310,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08080c] text-zinc-100 font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-[#08080c] dark:text-zinc-100 font-sans antialiased flex flex-col transition-colors">
       <Header
         profileName={activeProfile.name}
         savedPlansCount={activeProfile.savedPlans.length}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
         onOpenAccountModal={() => setIsAccountModalOpen(true)}
         onReset={handleReset}
       />
@@ -336,7 +359,7 @@ export default function App() {
           onSavePlan={() => handleSaveCurrentPlan()}
         />
 
-        <ChartsDashboard comparison={comparison} activeResult={activeResult} />
+        <ChartsDashboard comparison={comparison} activeResult={activeResult} theme={theme} />
 
         <MonthlyTracker
           profileName={activeProfile.name}
@@ -357,8 +380,8 @@ export default function App() {
         />
       </main>
 
-      <footer className="py-6 border-t border-zinc-800/90 bg-[#08080d] text-center text-xs text-zinc-500 px-4">
-        <span className="text-zinc-300 font-semibold">Thoth</span> · Hesaplamalar TCMB/BDDK mevzuat parametreleri ve girdiğiniz verilere dayanır; verileriniz tarayıcınızda yerel olarak saklanır.
+      <footer className="py-6 border-t border-zinc-200 dark:border-zinc-800/90 bg-white dark:bg-[#08080d] text-center text-xs text-zinc-500 px-4 transition-colors">
+        <span className="text-zinc-900 dark:text-zinc-300 font-semibold">Thoth</span> · Hesaplamalar TCMB/BDDK mevzuat parametreleri ve girdiğiniz verilere dayanır; verileriniz tarayıcınızda yerel olarak saklanır.
       </footer>
 
       <AccountModal
