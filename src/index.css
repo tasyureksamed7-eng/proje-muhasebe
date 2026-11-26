@@ -9,6 +9,7 @@
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    color-scheme: dark;
   }
 
   .tabular-nums {

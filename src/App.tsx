@@ -289,7 +289,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased flex flex-col">
+    <div className="min-h-screen bg-[#08080c] text-zinc-100 font-sans antialiased flex flex-col">
       <Header
         profileName={activeProfile.name}
         savedPlansCount={activeProfile.savedPlans.length}
@@ -298,7 +298,7 @@ export default function App() {
       />
 
       {toastMessage && (
-        <div className="fixed bottom-4 right-4 z-40 bg-slate-900 text-white text-xs sm:text-sm px-4 py-2.5 rounded-lg shadow-lg">
+        <div className="fixed bottom-4 right-4 z-40 bg-violet-600 text-white border border-violet-400/40 text-xs sm:text-sm px-4 py-2.5 rounded-lg shadow-xl">
           {toastMessage}
         </div>
       )}
@@ -357,8 +357,8 @@ export default function App() {
         />
       </main>
 
-      <footer className="py-6 border-t border-slate-200 bg-white text-center text-xs text-slate-500 px-4">
-        Thoth · Hesaplamalar TCMB/BDDK mevzuat parametreleri ve girdiğiniz verilere dayanır; verileriniz tarayıcınızda yerel olarak saklanır.
+      <footer className="py-6 border-t border-zinc-800/90 bg-[#08080d] text-center text-xs text-zinc-500 px-4">
+        <span className="text-zinc-300 font-semibold">Thoth</span> · Hesaplamalar TCMB/BDDK mevzuat parametreleri ve girdiğiniz verilere dayanır; verileriniz tarayıcınızda yerel olarak saklanır.
       </footer>
 
       <AccountModal

@@ -85,13 +85,11 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
   const [showExtraPanel, setShowExtraPanel] = useState(false);
   const [showRestructurePanel, setShowRestructurePanel] = useState(false);
 
-  // New debt draft
   const [newName, setNewName] = useState('');
   const [newType, setNewType] = useState<DebtType>('credit_card');
   const [newBalance, setNewBalance] = useState('');
   const [newLimit, setNewLimit] = useState('');
 
-  // Extra payment draft
   const [extraMonth, setExtraMonth] = useState('2');
   const [extraAmount, setExtraAmount] = useState('');
   const [extraTargetId, setExtraTargetId] = useState('');
@@ -199,27 +197,27 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
   const tariffMeta = TARIFF_METADATA[tariffPeriod];
 
   return (
-    <section id="borclar" className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 space-y-6">
+    <section id="borclar" className="bg-[#111118] border border-zinc-800/90 rounded-xl p-4 sm:p-6 space-y-6">
       {/* Header & Global Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
         <div>
-          <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
             Borç Kalemleri ve Aylık Ödeme Bütçesi
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
             {tariffMeta.source} · Güncel Tarife: {tariffMeta.effectiveDate}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+          <div className="inline-flex rounded-lg border border-zinc-800 bg-[#09090e] p-0.5">
             <button
               type="button"
               onClick={() => onChangeTariffPeriod('nov_2026')}
               className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
                 tariffPeriod === 'nov_2026'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-violet-600 text-white'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               Kasım 2026 (%3,11)
@@ -229,8 +227,8 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
               onClick={() => onChangeTariffPeriod('dec_2026')}
               className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
                 tariffPeriod === 'dec_2026'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-violet-600 text-white'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               1 Aralık (%2,94)
@@ -240,9 +238,9 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
           <button
             type="button"
             onClick={() => setShowRateSources(!showRateSources)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg cursor-pointer min-h-[34px]"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-lg cursor-pointer min-h-[34px]"
           >
-            <Landmark className="w-3.5 h-3.5 text-slate-500" />
+            <Landmark className="w-3.5 h-3.5 text-violet-400" />
             <span>Oran Kaynakları</span>
             {showRateSources ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
@@ -251,21 +249,19 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
       {/* Regulatory Rate Sources Drawer */}
       {showRateSources && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900">
-                Türkiye Güncel Referans Faiz ve Vergi Tablosu ({tariffMeta.label})
-              </h3>
-              <p className="text-xs text-slate-500">
-                Oranlar değişse bile kayıtlı eski planlarınızdaki tarihi oranlar otomatik korunur. Her borç kaleminde oranı manuel olarak düzenleyebilirsiniz.
-              </p>
-            </div>
+        <div className="bg-[#09090e] border border-zinc-800 rounded-lg p-4 space-y-3">
+          <div>
+            <h3 className="text-sm font-semibold text-white">
+              Türkiye Güncel Referans Faiz ve Vergi Tablosu ({tariffMeta.label})
+            </h3>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Oranlar değişse bile kayıtlı eski planlarınızdaki tarihi oranlar otomatik korunur. Her borç kaleminde oranı manuel olarak düzenleyebilirsiniz.
+            </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-200 text-slate-500">
+                <tr className="border-b border-zinc-800 text-zinc-400">
                   <th className="py-2 pr-3 font-medium">Borç Türü / Kademe</th>
                   <th className="py-2 px-2 font-medium text-right">Akdi</th>
                   <th className="py-2 px-2 font-medium text-right">Gecikme</th>
@@ -274,17 +270,17 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                   <th className="py-2 pl-3 font-medium">Kaynak & Geçerlilik</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/70">
+              <tbody className="divide-y divide-zinc-800/70">
                 {referenceRows.map((row) => (
-                  <tr key={row.id} className="text-slate-700">
-                    <td className="py-2 pr-3 font-medium text-slate-900">{row.title}</td>
+                  <tr key={row.id} className="text-zinc-300">
+                    <td className="py-2 pr-3 font-medium text-white">{row.title}</td>
                     <td className="py-2 px-2 text-right font-mono tabular-nums">%{row.contractualRate.toFixed(2)}</td>
                     <td className="py-2 px-2 text-right font-mono tabular-nums">%{row.overdueRate.toFixed(2)}</td>
                     <td className="py-2 px-2 text-right font-mono tabular-nums">
                       %{row.bsmvRate} + %{row.kkdfRate}
                     </td>
                     <td className="py-2 px-2 text-right font-mono tabular-nums">%{row.minPaymentRate}</td>
-                    <td className="py-2 pl-3 text-slate-500">
+                    <td className="py-2 pl-3 text-zinc-400">
                       {row.source} ({row.effectiveDate}) · {row.note}
                     </td>
                   </tr>
@@ -298,7 +294,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
       {/* Top KPI Summary + Budget Input */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
         <div className="md:col-span-5 space-y-1.5">
-          <label htmlFor="monthly-budget-input" className="block text-sm font-semibold text-slate-800">
+          <label htmlFor="monthly-budget-input" className="block text-sm font-semibold text-zinc-200">
             Aylık Ödeyebileceğiniz Bütçe (₺)
           </label>
           <div className="relative">
@@ -309,27 +305,27 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
               value={monthlyBudget === 0 ? '' : monthlyBudget}
               placeholder="Örn: 22000"
               onChange={(e) => handleNumberInput(e.target.value, setMonthlyBudget)}
-              className="w-full px-3.5 py-2.5 pr-10 text-base font-semibold font-mono tabular-nums text-slate-900 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-900 min-h-[44px]"
+              className="w-full px-3.5 py-2.5 pr-10 text-base font-semibold font-mono tabular-nums text-white bg-[#09090e] border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 min-h-[44px] placeholder:text-zinc-600"
             />
-            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-slate-400">
+            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-medium text-zinc-400">
               ₺
             </span>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-zinc-400">
             Tüm stratejiler bu bütçe sınırınıza sadık kalarak hesaplanır.
           </p>
         </div>
 
         <div className="md:col-span-4 space-y-1.5">
-          <span className="block text-sm font-semibold text-slate-800">Asgari Ödeme Hesaplama Yöntemi</span>
+          <span className="block text-sm font-semibold text-zinc-200">Asgari Ödeme Hesaplama Yöntemi</span>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setCalculationMode('fixed')}
               className={`px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg border transition-colors cursor-pointer min-h-[44px] ${
                 calculationMode === 'fixed'
-                  ? 'bg-slate-900 text-white border-slate-900'
-                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  ? 'bg-white text-zinc-950 border-white font-semibold'
+                  : 'bg-[#09090e] text-zinc-300 border-zinc-800 hover:border-violet-500/50 hover:text-white'
               }`}
             >
               Sabit Taksit / Başlangıç
@@ -339,53 +335,53 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
               onClick={() => setCalculationMode('revolving')}
               className={`px-3 py-2.5 text-xs sm:text-sm font-medium rounded-lg border transition-colors cursor-pointer min-h-[44px] ${
                 calculationMode === 'revolving'
-                  ? 'bg-slate-900 text-white border-slate-900'
-                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                  ? 'bg-white text-zinc-950 border-white font-semibold'
+                  : 'bg-[#09090e] text-zinc-300 border-zinc-800 hover:border-violet-500/50 hover:text-white'
               }`}
             >
               Dönen Bakiye
             </button>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-zinc-400">
             {calculationMode === 'fixed'
               ? 'Asgari tutar ilk dönem borcu bazında sabit tutulur.'
               : 'Borç azaldıkça aylık asgari ödeme oranı da düşer.'}
           </p>
         </div>
 
-        <div className="md:col-span-3 bg-slate-50 border border-slate-200 rounded-lg p-3.5 flex flex-col justify-center">
-          <span className="text-xs font-medium text-slate-500">Toplam Aktif Borç</span>
-          <span className="text-xl sm:text-2xl font-bold text-slate-900 font-mono tabular-nums mt-0.5">
+        <div className="md:col-span-3 bg-[#09090e] border border-violet-500/30 rounded-lg p-3.5 flex flex-col justify-center">
+          <span className="text-xs font-medium text-zinc-400">Toplam Aktif Borç</span>
+          <span className="text-xl sm:text-2xl font-bold text-white font-mono tabular-nums mt-0.5">
             {formatCurrencyTR(totalDebt)}
           </span>
-          <span className="text-xs text-slate-500 mt-1 tabular-nums">
-            İlk ay asgari: <strong className="text-slate-700">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>
+          <span className="text-xs text-zinc-400 mt-1 tabular-nums">
+            İlk ay asgari: <strong className="text-violet-300">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>
           </span>
         </div>
       </div>
 
       {/* Budget Shortfall / Zero Warning */}
       {totalDebt > 0 && (monthlyBudget <= 0 || budgetShortfallFirstMonth > 0) && (
-        <div className="flex items-start gap-3 p-3.5 rounded-lg border border-amber-200 bg-amber-50/70 text-amber-950 text-xs sm:text-sm">
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 p-3.5 rounded-lg border border-violet-500/40 bg-violet-950/30 text-zinc-100 text-xs sm:text-sm">
+          <AlertTriangle className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             {monthlyBudget <= 0 ? (
               <>
-                <p className="font-semibold">Aylık ödeme bütçeniz 0 ₺ olarak görünüyor.</p>
-                <p className="text-amber-800">
+                <p className="font-semibold text-white">Aylık ödeme bütçeniz 0 ₺ olarak görünüyor.</p>
+                <p className="text-zinc-300">
                   İlk ay yasal/sözleşmesel asgari ödeme gereksinimi{' '}
-                  <strong className="font-mono tabular-nums">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>{' '}
+                  <strong className="font-mono tabular-nums text-violet-300">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>{' '}
                   tutardadır. Bütçe girilmediği için planlanan ödemeler 0 ₺ olarak gösterilir ve borç gecikme faiziyle büyür.
                 </p>
               </>
             ) : (
               <>
-                <p className="font-semibold">
+                <p className="font-semibold text-white">
                   Bütçeniz ilk ay asgari ödemenin {formatCurrencyTR(budgetShortfallFirstMonth)} altında kalıyor.
                 </p>
-                <p className="text-amber-800">
-                  Gereken asgari tutar <strong className="font-mono tabular-nums">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>, bütçeniz{' '}
-                  <strong className="font-mono tabular-nums">{formatCurrencyTR(monthlyBudget)}</strong>. Eksik kalan kısım için sonraki aylarda gecikme faizi işler; yapılandırma veya ara ödeme seçeneklerini inceleyebilirsiniz.
+                <p className="text-zinc-300">
+                  Gereken asgari tutar <strong className="font-mono tabular-nums text-violet-300">{formatCurrencyTR(minimumRequiredFirstMonth)}</strong>, bütçeniz{' '}
+                  <strong className="font-mono tabular-nums text-white">{formatCurrencyTR(monthlyBudget)}</strong>. Eksik kalan kısım için sonraki aylarda gecikme faizi işler; yapılandırma veya ara ödeme seçeneklerini inceleyebilirsiniz.
                 </p>
               </>
             )}
@@ -395,28 +391,28 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
       {/* Existing Debts List */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <h2 className="text-sm font-semibold text-white">
             Tanımlı Borç Kalemleri ({debts.length})
           </h2>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-zinc-400">
             Detaylı faiz, vergi, vade ve gecikme ayarları için borca tıklayın
           </span>
         </div>
 
         {debts.length === 0 ? (
-          <div className="p-6 text-center border border-dashed border-slate-200 rounded-lg text-sm text-slate-500">
+          <div className="p-6 text-center border border-dashed border-zinc-800 rounded-lg text-sm text-zinc-400">
             Henüz borç kalemi eklenmedi. Aşağıdaki formdan yeni borç ekleyebilirsiniz.
           </div>
         ) : (
-          <div className="divide-y divide-slate-200 border border-slate-200 rounded-lg overflow-hidden">
+          <div className="divide-y divide-zinc-800 border border-zinc-800 rounded-lg overflow-hidden">
             {debts.map((debt) => {
               const isExpanded = expandedDebtId === debt.id;
               const effectiveRate = getEffectiveMonthlyRatePercent(debt);
               const meta = DEBT_TYPE_META[debt.type];
 
               return (
-                <div key={debt.id} className={debt.isPaidOff ? 'bg-slate-50/60 opacity-75' : 'bg-white'}>
+                <div key={debt.id} className={debt.isPaidOff ? 'bg-zinc-950/60 opacity-60' : 'bg-[#0b0b12]'}>
                   {/* Summary Row */}
                   <div className="p-3.5 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
@@ -426,8 +422,8 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                         title={debt.isPaidOff ? 'Borcu tekrar aktifleştir' : 'Borcu kapandı olarak işaretle'}
                         className={`mt-0.5 sm:mt-0 w-5 h-5 rounded border flex items-center justify-center shrink-0 cursor-pointer transition-colors ${
                           debt.isPaidOff
-                            ? 'bg-emerald-600 border-emerald-600 text-white'
-                            : 'border-slate-300 bg-white hover:border-slate-500'
+                            ? 'bg-violet-600 border-violet-500 text-white'
+                            : 'border-zinc-700 bg-[#09090e] hover:border-violet-400'
                         }`}
                       >
                         {debt.isPaidOff && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -435,20 +431,20 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                          <span className={`font-semibold text-sm text-slate-900 truncate ${debt.isPaidOff ? 'line-through' : ''}`}>
+                          <span className={`font-semibold text-sm text-white truncate ${debt.isPaidOff ? 'line-through' : ''}`}>
                             {debt.name}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-zinc-400">
                             · {meta.shortLabel}
                             {debt.isOverdue && (
-                              <span className="text-rose-600 font-medium"> · Gecikmiş ({debt.overdueDays} gün)</span>
+                              <span className="text-violet-300 font-medium"> · Gecikmiş ({debt.overdueDays} gün)</span>
                             )}
                             {debt.isPaidOff && (
-                              <span className="text-emerald-700 font-medium"> · Kapandı</span>
+                              <span className="text-violet-300 font-medium"> · Kapandı</span>
                             )}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500 mt-0.5 tabular-nums">
+                        <p className="text-xs text-zinc-400 mt-0.5 tabular-nums">
                           Akdi %{debt.contractualRate.toFixed(2)} · Vergi %{debt.bsmvRate + debt.kkdfRate} (Efektif %{effectiveRate.toFixed(2)}) · Asgari %{debt.minPaymentRate} · Son Ödeme: Ayın {debt.dueDay}&apos;i
                         </p>
                       </div>
@@ -476,17 +472,17 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                               onUpdateDebt(debt.id, patch);
                             }
                           }}
-                          className="w-28 sm:w-32 px-2.5 py-1.5 text-right text-sm font-semibold font-mono tabular-nums text-slate-900 bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:border-slate-900 min-h-[38px]"
+                          className="w-28 sm:w-32 px-2.5 py-1.5 text-right text-sm font-semibold font-mono tabular-nums text-white bg-[#12121b] border border-zinc-700 rounded-md focus:bg-[#09090e] focus:outline-none focus:border-violet-500 min-h-[38px]"
                         />
-                        <span className="text-xs text-slate-400">₺</span>
+                        <span className="text-xs text-zinc-400">₺</span>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => setExpandedDebtId(isExpanded ? null : debt.id)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-md cursor-pointer min-h-[38px]"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 border border-zinc-800 rounded-md cursor-pointer min-h-[38px]"
                       >
-                        <SlidersHorizontal className="w-3.5 h-3.5" />
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-violet-400" />
                         <span className="hidden sm:inline">Detay</span>
                         {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                       </button>
@@ -495,7 +491,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                         type="button"
                         onClick={() => onRemoveDebt(debt.id)}
                         aria-label={`${debt.name} sil`}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
+                        className="p-2 text-zinc-500 hover:text-violet-300 hover:bg-zinc-800 rounded-md cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -504,27 +500,27 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
                   {/* Expanded Advanced Parameters */}
                   {isExpanded && (
-                    <div className="px-4 pb-4 pt-3 bg-slate-50/70 border-t border-slate-200/70 space-y-4">
+                    <div className="px-4 pb-4 pt-3 bg-[#08080c] border-t border-zinc-800 space-y-4">
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">Borç Adı</label>
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">Borç Adı</label>
                           <input
                             type="text"
                             value={debt.name}
                             onChange={(e) => onUpdateDebt(debt.id, { name: e.target.value })}
-                            className="w-full px-2.5 py-2 text-sm bg-white border border-slate-200 rounded-md min-h-[40px]"
+                            className="w-full px-2.5 py-2 text-sm text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">Borç Türü</label>
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">Borç Türü</label>
                           <select
                             value={debt.type}
                             onChange={(e) => handleDebtTypeChange(debt, e.target.value as DebtType)}
-                            className="w-full px-2.5 py-2 text-sm bg-white border border-slate-200 rounded-md min-h-[40px]"
+                            className="w-full px-2.5 py-2 text-sm text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                           >
                             {DEBT_TYPE_OPTIONS.map((t) => (
-                              <option key={t} value={t}>
+                              <option key={t} value={t} className="bg-zinc-950 text-white">
                                 {DEBT_TYPE_META[t].label}
                               </option>
                             ))}
@@ -533,7 +529,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
                         {meta.supportsLimitTier && (
                           <div>
-                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                            <label className="block text-xs font-medium text-zinc-400 mb-1">
                               Kart Limiti (BDDK Kademesi)
                             </label>
                             <input
@@ -549,14 +545,14 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   rateSource: debt.isManualRate ? debt.rateSource : preset.rateSource,
                                 });
                               }}
-                              className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                             />
                           </div>
                         )}
 
                         {meta.supportsInstallments && (
                           <div>
-                            <label className="block text-xs font-medium text-slate-600 mb-1">
+                            <label className="block text-xs font-medium text-zinc-400 mb-1">
                               Kalan Vade (Ay)
                             </label>
                             <input
@@ -569,13 +565,13 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   remainingInstallments: Math.max(1, Math.round(Number(e.target.value) || 1)),
                                 })
                               }
-                              className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                             />
                           </div>
                         )}
 
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">
                             Aylık Akdi Faiz (%)
                           </label>
                           <input
@@ -591,12 +587,12 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                 rateUpdatedAt: new Date().toISOString().slice(0, 10),
                               })
                             }
-                            className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                            className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">
                             Aylık Gecikme Faizi (%)
                           </label>
                           <input
@@ -610,12 +606,12 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                 isManualRate: true,
                               })
                             }
-                            className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                            className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">
                             BSMV (%) / KKDF (%)
                           </label>
                           <div className="grid grid-cols-2 gap-2">
@@ -630,7 +626,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   isManualRate: true,
                                 })
                               }
-                              className="w-full px-2 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                               title="BSMV %"
                             />
                             <input
@@ -644,14 +640,14 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   isManualRate: true,
                                 })
                               }
-                              className="w-full px-2 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                               title="KKDF %"
                             />
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-xs font-medium text-slate-600 mb-1">
+                          <label className="block text-xs font-medium text-zinc-400 mb-1">
                             Asgari Oran (%) / Ödeme Günü
                           </label>
                           <div className="grid grid-cols-2 gap-2">
@@ -666,7 +662,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   isManualRate: true,
                                 })
                               }
-                              className="w-full px-2 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                               title="Asgari ödeme %"
                             />
                             <input
@@ -679,7 +675,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   dueDay: Math.max(1, Math.min(31, Math.round(Number(e.target.value) || 1))),
                                 })
                               }
-                              className="w-full px-2 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                              className="w-full px-2 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
                               title="Son ödeme günü"
                             />
                           </div>
@@ -687,9 +683,9 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                       </div>
 
                       {/* Overdue toggle + Source line */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-slate-200/70">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800">
                         <div className="flex flex-wrap items-center gap-3">
-                          <label className="inline-flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                          <label className="inline-flex items-center gap-2 text-xs font-medium text-zinc-300 cursor-pointer">
                             <input
                               type="checkbox"
                               checked={debt.isOverdue}
@@ -699,14 +695,14 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                   overdueDays: e.target.checked ? Math.max(1, debt.overdueDays || 10) : 0,
                                 })
                               }
-                              className="rounded border-slate-300"
+                              className="rounded border-zinc-600 accent-violet-500"
                             />
                             Gecikmiş Borç (Gün bazlı gecikme faizi uygula)
                           </label>
 
                           {debt.isOverdue && (
                             <div className="inline-flex items-center gap-1.5 text-xs">
-                              <span className="text-slate-500">Gecikme Günü:</span>
+                              <span className="text-zinc-400">Gecikme Günü:</span>
                               <input
                                 type="number"
                                 min={1}
@@ -717,21 +713,21 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                                     overdueDays: Math.max(0, Math.round(Number(e.target.value) || 0)),
                                   })
                                 }
-                                className="w-16 px-2 py-1 text-xs font-mono tabular-nums bg-white border border-slate-300 rounded"
+                                className="w-16 px-2 py-1 text-xs font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded"
                               />
                             </div>
                           )}
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400">
                           <span>
-                            Kaynak: <strong className="text-slate-700">{debt.rateSource}</strong> ({debt.rateUpdatedAt})
+                            Kaynak: <strong className="text-zinc-200">{debt.rateSource}</strong> ({debt.rateUpdatedAt})
                           </span>
                           {debt.isManualRate && (
                             <button
                               type="button"
                               onClick={() => handleApplyPresetToDebt(debt)}
-                              className="text-slate-700 underline hover:text-slate-900 cursor-pointer"
+                              className="text-violet-400 underline hover:text-violet-300 cursor-pointer"
                             >
                               Güncel TCMB Oranına Sıfırla
                             </button>
@@ -753,15 +749,15 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Yeni borç adı (Örn: Banka Kartı)"
-            className="sm:col-span-4 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-slate-900 min-h-[42px]"
+            className="sm:col-span-4 px-3 py-2 text-sm text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 placeholder:text-zinc-500 min-h-[42px]"
           />
           <select
             value={newType}
             onChange={(e) => setNewType(e.target.value as DebtType)}
-            className="sm:col-span-3 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-slate-900 min-h-[42px]"
+            className="sm:col-span-3 px-3 py-2 text-sm text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 min-h-[42px]"
           >
             {DEBT_TYPE_OPTIONS.map((t) => (
-              <option key={t} value={t}>
+              <option key={t} value={t} className="bg-zinc-950 text-white">
                 {DEBT_TYPE_META[t].label}
               </option>
             ))}
@@ -772,7 +768,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
             value={newBalance}
             onChange={(e) => setNewBalance(e.target.value)}
             placeholder="Tutar (₺)"
-            className="sm:col-span-2 px-3 py-2 text-sm font-mono tabular-nums bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-slate-900 min-h-[42px]"
+            className="sm:col-span-2 px-3 py-2 text-sm font-mono tabular-nums text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 placeholder:text-zinc-500 min-h-[42px]"
           />
           <input
             type="text"
@@ -781,11 +777,11 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
             disabled={!DEBT_TYPE_META[newType].supportsLimitTier}
             onChange={(e) => setNewLimit(e.target.value)}
             placeholder={DEBT_TYPE_META[newType].supportsLimitTier ? 'Kart Limiti (₺)' : 'Limit yok'}
-            className="sm:col-span-2 px-3 py-2 text-sm font-mono tabular-nums bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:border-slate-900 disabled:opacity-50 min-h-[42px]"
+            className="sm:col-span-2 px-3 py-2 text-sm font-mono tabular-nums text-white bg-[#09090e] border border-zinc-800 rounded-lg focus:outline-none focus:border-violet-500 placeholder:text-zinc-500 disabled:opacity-40 min-h-[42px]"
           />
           <button
             type="submit"
-            className="sm:col-span-1 inline-flex items-center justify-center gap-1 px-3 py-2 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer min-h-[42px]"
+            className="sm:col-span-1 inline-flex items-center justify-center gap-1 px-3 py-2 text-sm font-semibold text-white bg-violet-600 hover:bg-violet-500 rounded-lg transition-colors cursor-pointer min-h-[42px]"
           >
             <Plus className="w-4 h-4" />
             <span className="sm:hidden">Borç Ekle</span>
@@ -793,14 +789,14 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
         </form>
       </div>
 
-      {/* Collapsible Tools: Interim Payments & Debt Restructuring */}
-      <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
+      {/* Collapsible Tools */}
+      <div className="pt-2 border-t border-zinc-800 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => setShowExtraPanel(!showExtraPanel)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg cursor-pointer min-h-[40px]"
+          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-lg cursor-pointer min-h-[40px]"
         >
-          <CalendarPlus className="w-4 h-4 text-slate-500" />
+          <CalendarPlus className="w-4 h-4 text-violet-400" />
           <span>Ara / Erken Ödeme Planla ({extraPayments.length})</span>
           {showExtraPanel ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
@@ -808,9 +804,9 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
         <button
           type="button"
           onClick={() => setShowRestructurePanel(!showRestructurePanel)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg cursor-pointer min-h-[40px]"
+          className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-medium text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-lg cursor-pointer min-h-[40px]"
         >
-          <SlidersHorizontal className="w-4 h-4 text-slate-500" />
+          <SlidersHorizontal className="w-4 h-4 text-violet-400" />
           <span>
             Borç Yapılandırma Simülatörü {restructureConfig.enabled ? '(Aktif)' : ''}
           </span>
@@ -820,10 +816,10 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
       {/* Interim / Extra Payments Panel */}
       {showExtraPanel && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+        <div className="bg-[#09090e] border border-zinc-800 rounded-lg p-4 space-y-3">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">Ara Ödeme ve Erken Kapatma Planlayıcı</h3>
-            <p className="text-xs text-slate-500">
+            <h3 className="text-sm font-semibold text-white">Ara Ödeme ve Erken Kapatma Planlayıcı</h3>
+            <p className="text-xs text-zinc-400">
               İlerleyen aylarda elinize geçecek prim, ikramiye veya toplu parayı girin; tüm stratejiler ve kapanış tarihleri anında güncellenir.
             </p>
           </div>
@@ -837,7 +833,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 value={extraMonth}
                 onChange={(e) => setExtraMonth(e.target.value)}
                 placeholder="Kaçıncı ay"
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <div className="sm:col-span-3">
@@ -847,18 +843,18 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 value={extraAmount}
                 onChange={(e) => setExtraAmount(e.target.value)}
                 placeholder="Ara Ödeme (₺)"
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <div className="sm:col-span-3">
               <select
                 value={extraTargetId}
                 onChange={(e) => setExtraTargetId(e.target.value)}
-                className="w-full px-2.5 py-2 text-sm bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               >
-                <option value="">Strateji Önceliğine Göre</option>
+                <option value="" className="bg-zinc-950 text-white">Strateji Önceliğine Göre</option>
                 {debts.map((d) => (
-                  <option key={d.id} value={d.id}>
+                  <option key={d.id} value={d.id} className="bg-zinc-950 text-white">
                     Hedef: {d.name}
                   </option>
                 ))}
@@ -870,19 +866,19 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 value={extraNote}
                 onChange={(e) => setExtraNote(e.target.value)}
                 placeholder="Not (Örn: İkramiye)"
-                className="w-full px-2.5 py-2 text-sm bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <button
               type="submit"
-              className="sm:col-span-1 px-3 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-md cursor-pointer min-h-[40px]"
+              className="sm:col-span-1 px-3 py-2 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 rounded-md cursor-pointer min-h-[40px]"
             >
               Ekle
             </button>
           </form>
 
           {extraPayments.length > 0 && (
-            <div className="divide-y divide-slate-200 border border-slate-200 bg-white rounded-md">
+            <div className="divide-y divide-zinc-800 border border-zinc-800 bg-[#111118] rounded-md">
               {extraPayments.map((ev) => {
                 const targetName = ev.targetDebtId
                   ? debts.find((d) => d.id === ev.targetDebtId)?.name || 'Belirli Borç'
@@ -890,17 +886,17 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 return (
                   <div key={ev.id} className="px-3 py-2 flex items-center justify-between text-xs sm:text-sm">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono font-semibold text-slate-900">{ev.month}. Ay</span>
-                      <span className="font-mono font-semibold text-emerald-700 tabular-nums">
+                      <span className="font-mono font-semibold text-white">{ev.month}. Ay</span>
+                      <span className="font-mono font-semibold text-violet-300 tabular-nums">
                         +{formatCurrencyTR(ev.amount)}
                       </span>
-                      <span className="text-slate-500">· {targetName}</span>
-                      {ev.note && <span className="text-slate-400">· {ev.note}</span>}
+                      <span className="text-zinc-400">· {targetName}</span>
+                      {ev.note && <span className="text-zinc-500">· {ev.note}</span>}
                     </div>
                     <button
                       type="button"
                       onClick={() => onRemoveExtraPayment(ev.id)}
-                      className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer"
+                      className="text-zinc-500 hover:text-violet-300 p-1 cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -914,20 +910,20 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
       {/* Debt Restructuring Simulator Panel */}
       {showRestructurePanel && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-4">
+        <div className="bg-[#09090e] border border-zinc-800 rounded-lg p-4 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">Borç Yapılandırma / Tek Kredide Birleştirme Simülatörü</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-sm font-semibold text-white">Borç Yapılandırma / Tek Kredide Birleştirme Simülatörü</h3>
+              <p className="text-xs text-zinc-400">
                 Mevcut toplam borcunuzu tek bir taksitli yapılandırma kredisine dönüştürmenin maliyetini karşılaştırın.
               </p>
             </div>
-            <label className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-800 cursor-pointer">
+            <label className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white cursor-pointer">
               <input
                 type="checkbox"
                 checked={restructureConfig.enabled}
                 onChange={(e) => onUpdateRestructure({ enabled: e.target.checked })}
-                className="rounded border-slate-300"
+                className="rounded border-zinc-600 accent-violet-500"
               />
               Simülasyonu Aktifleştir
             </label>
@@ -935,7 +931,7 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Aylık Yapılandırma Faizi (%)</label>
+              <label className="block text-xs font-medium text-zinc-400 mb-1">Aylık Yapılandırma Faizi (%)</label>
               <input
                 type="number"
                 step="0.01"
@@ -947,11 +943,11 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                     enabled: true,
                   })
                 }
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Vade (Ay)</label>
+              <label className="block text-xs font-medium text-zinc-400 mb-1">Vade (Ay)</label>
               <input
                 type="number"
                 min={1}
@@ -963,11 +959,11 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                     enabled: true,
                   })
                 }
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">BSMV (%)</label>
+              <label className="block text-xs font-medium text-zinc-400 mb-1">BSMV (%)</label>
               <input
                 type="number"
                 min={0}
@@ -976,11 +972,11 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 onChange={(e) =>
                   onUpdateRestructure({ bsmvRate: Math.max(0, Number(e.target.value) || 0) })
                 }
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">KKDF (%)</label>
+              <label className="block text-xs font-medium text-zinc-400 mb-1">KKDF (%)</label>
               <input
                 type="number"
                 min={0}
@@ -989,47 +985,47 @@ export const DebtManagerCard: React.FC<DebtManagerCardProps> = ({
                 onChange={(e) =>
                   onUpdateRestructure({ kkdfRate: Math.max(0, Number(e.target.value) || 0) })
                 }
-                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums bg-white border border-slate-200 rounded-md min-h-[40px]"
+                className="w-full px-2.5 py-2 text-sm font-mono tabular-nums text-white bg-[#111118] border border-zinc-700 rounded-md min-h-[40px]"
               />
             </div>
           </div>
 
           {restructureConfig.enabled && restructureResult && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-200">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-zinc-800">
               <div>
-                <span className="text-xs text-slate-500">Sabit Aylık Taksit</span>
-                <p className="text-base font-bold font-mono tabular-nums text-slate-900">
+                <span className="text-xs text-zinc-400">Sabit Aylık Taksit</span>
+                <p className="text-base font-bold font-mono tabular-nums text-white">
                   {formatCurrencyTR(restructureResult.monthlyInstallment)}
                 </p>
-                <span className={`text-xs ${restructureResult.isWithinBudget ? 'text-emerald-700' : 'text-rose-600'}`}>
+                <span className={`text-xs ${restructureResult.isWithinBudget ? 'text-violet-300' : 'text-zinc-400'}`}>
                   {restructureResult.isWithinBudget ? 'Bütçenize uygun' : 'Aylık bütçeyi aşıyor'}
                 </span>
               </div>
               <div>
-                <span className="text-xs text-slate-500">Toplam Faiz + Vergi</span>
-                <p className="text-base font-bold font-mono tabular-nums text-slate-900">
+                <span className="text-xs text-zinc-400">Toplam Faiz + Vergi</span>
+                <p className="text-base font-bold font-mono tabular-nums text-white">
                   {formatCurrencyTR(restructureResult.totalInterestAndTaxes)}
                 </p>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-zinc-400">
                   Efektif %{restructureResult.effectiveMonthlyRateWithTaxes.toFixed(2)}/ay
                 </span>
               </div>
               <div>
-                <span className="text-xs text-slate-500">Toplam Geri Ödeme</span>
-                <p className="text-base font-bold font-mono tabular-nums text-slate-900">
+                <span className="text-xs text-zinc-400">Toplam Geri Ödeme</span>
+                <p className="text-base font-bold font-mono tabular-nums text-white">
                   {formatCurrencyTR(restructureResult.totalPaid)}
                 </p>
-                <span className="text-xs text-slate-500">Bitiş: {restructureResult.estimatedPayoffDate}</span>
+                <span className="text-xs text-zinc-400">Bitiş: {restructureResult.estimatedPayoffDate}</span>
               </div>
               <div>
-                <span className="text-xs text-slate-500">Asgari Ödemeye Göre Fark</span>
+                <span className="text-xs text-zinc-400">Asgari Ödemeye Göre Fark</span>
                 <p className={`text-base font-bold font-mono tabular-nums ${
-                  restructureResult.savingsVsCurrentMinimum >= 0 ? 'text-emerald-700' : 'text-rose-600'
+                  restructureResult.savingsVsCurrentMinimum >= 0 ? 'text-violet-300' : 'text-zinc-300'
                 }`}>
                   {restructureResult.savingsVsCurrentMinimum >= 0 ? '+' : ''}
                   {formatCurrencyTR(restructureResult.savingsVsCurrentMinimum)}
                 </p>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-zinc-400">
                   {restructureResult.savingsVsCurrentMinimum >= 0 ? 'Tahmini faiz avantajı' : 'Ek maliyet'}
                 </span>
               </div>

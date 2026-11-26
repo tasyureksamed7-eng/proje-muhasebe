@@ -54,7 +54,6 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Scoped scroll inside chat box ONLY — never scrolls the outer browser window
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const shouldScrollChatRef = useRef(false);
 
@@ -197,7 +196,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
           {parts.map((part, j) => {
             if (part.startsWith('**') && part.endsWith('**')) {
               return (
-                <strong key={j} className="font-semibold text-slate-900">
+                <strong key={j} className="font-semibold text-white">
                   {part.slice(2, -2)}
                 </strong>
               );
@@ -210,16 +209,14 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
   };
 
   return (
-    <section id="danisman" className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Yapay Zekâ Finans Danışmanı
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Yalnızca yukarıdaki hesaplama motorunuzun ürettiği gerçek veriler üzerinden yorum yapar; hayali faiz veya tasarruf üretmez.
-          </p>
-        </div>
+    <section id="danisman" className="bg-[#111118] border border-zinc-800/90 rounded-xl p-4 sm:p-6 space-y-4">
+      <div className="border-b border-zinc-800 pb-4">
+        <h2 className="text-lg font-bold text-white tracking-tight">
+          Yapay Zekâ Finans Danışmanı
+        </h2>
+        <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+          Yalnızca yukarıdaki hesaplama motorunuzun ürettiği gerçek veriler üzerinden yorum yapar; hayali faiz veya tasarruf üretmez.
+        </p>
       </div>
 
       {/* 8 Quick Questions */}
@@ -230,7 +227,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
             type="button"
             disabled={isLoading}
             onClick={() => handleSend(q)}
-            className="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-left"
+            className="px-3 py-1.5 text-xs font-medium text-zinc-200 bg-[#09090e] hover:bg-zinc-900 border border-zinc-800 hover:border-violet-500/60 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-left"
           >
             {q}
           </button>
@@ -240,7 +237,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
       {/* Chat Messages Area */}
       <div
         ref={chatContainerRef}
-        className="h-80 sm:h-96 overflow-y-auto border border-slate-200 rounded-lg bg-slate-50/50 p-3.5 sm:p-4 space-y-3"
+        className="h-80 sm:h-96 overflow-y-auto border border-zinc-800 rounded-lg bg-[#08080c] p-3.5 sm:p-4 space-y-3"
       >
         {messages.map((msg) => (
           <div
@@ -248,21 +245,21 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
             className={`flex items-start gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             {msg.role === 'model' && (
-              <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-7 h-7 rounded-lg bg-violet-600 text-white flex items-center justify-center shrink-0 mt-0.5">
                 <Bot className="w-4 h-4" />
               </div>
             )}
             <div
               className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm space-y-1 ${
                 msg.role === 'user'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-white border border-slate-200 text-slate-800'
+                  ? 'bg-white text-zinc-950 font-medium'
+                  : 'bg-[#13131c] border border-zinc-800 text-zinc-200'
               }`}
             >
               {msg.role === 'user' ? <p>{msg.text}</p> : renderFormattedText(msg.text)}
             </div>
             {msg.role === 'user' && (
-              <div className="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-200 flex items-center justify-center shrink-0 mt-0.5">
                 <User className="w-4 h-4" />
               </div>
             )}
@@ -270,7 +267,7 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
         ))}
 
         {isLoading && (
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-violet-300">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Motor verileriniz analiz ediliyor...</span>
           </div>
@@ -291,12 +288,12 @@ export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Borç planınız hakkında bir soru sorun..."
           disabled={isLoading}
-          className="flex-1 px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-900 min-h-[44px]"
+          className="flex-1 px-3.5 py-2.5 text-sm text-white bg-[#09090e] border border-zinc-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:border-violet-500 placeholder:text-zinc-500 min-h-[44px]"
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-40 rounded-lg transition-colors cursor-pointer min-h-[44px]"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-violet-600 hover:bg-violet-500 disabled:opacity-40 rounded-lg transition-colors cursor-pointer min-h-[44px]"
         >
           <Send className="w-4 h-4" />
           <span className="hidden sm:inline">Gönder</span>

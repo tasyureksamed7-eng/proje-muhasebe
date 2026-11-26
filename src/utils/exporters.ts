@@ -144,10 +144,10 @@ export function exportTurkishPdfReport(params: {
     ctx.fillRect(0, 0, PAGE_W, PAGE_H);
 
     // Üst şerit
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(MARGIN, 46, CONTENT_W, 3);
+    ctx.fillStyle = '#7c3aed';
+    ctx.fillRect(MARGIN, 46, CONTENT_W, 4);
 
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = '#09090b';
     ctx.font = '700 22px "Plus Jakarta Sans", Arial, sans-serif';
     ctx.fillText('Thoth — Kişisel Borç Yönetim Raporu', MARGIN, 82);
 
@@ -312,14 +312,14 @@ export function exportTurkishPdfReport(params: {
       {
         label: 'Tahmini Bitiş',
         value: activeResult.isPayable ? `${activeResult.monthsToPayoff} Ay (${activeResult.estimatedPayoffDate})` : 'Bütçe Yetersiz',
-        accent: activeResult.isPayable ? '#047857' : '#b91c1c',
+        accent: activeResult.isPayable ? '#6d28d9' : '#18181b',
       },
     ]);
 
     drawKpiRow([
-      { label: 'Toplam Faiz + BSMV + KKDF', value: formatCurrencyTR(activeResult.totalInterestAndTaxes), accent: '#b45309' },
+      { label: 'Toplam Faiz + BSMV + KKDF', value: formatCurrencyTR(activeResult.totalInterestAndTaxes), accent: '#7c3aed' },
       { label: 'Toplam Geri Ödeme', value: formatCurrencyTR(activeResult.totalPaid) },
-      { label: 'Asgariye Göre Faiz Tasarrufu', value: formatCurrencyTR(activeResult.interestSavedVsMinimum), accent: '#047857' },
+      { label: 'Asgariye Göre Faiz Tasarrufu', value: formatCurrencyTR(activeResult.interestSavedVsMinimum), accent: '#6d28d9' },
     ]);
 
     drawSectionTitle('Borç Kalemleri ve Yasal Oran Kaynakları');
