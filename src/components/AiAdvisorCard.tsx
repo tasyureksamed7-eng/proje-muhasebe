@@ -1,327 +1,307 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Send, Loader2, Bot, User } from 'lucide-react';
 import {
-  Send,
-  Loader2,
-  Copy,
-  Check,
-  AlertCircle,
-  RotateCcw,
-  Bot,
-  User,
-} from 'lucide-react';
-import { DebtItem } from '../types/debt';
+  AllStrategiesComparison,
+  DebtItem,
+  StrategyResult,
+  StrategyType,
+} from '../types/finance';
+import { formatCurrencyTR } from '../engine/turkeyMath';
+import { DEBT_TYPE_META, TARIFF_METADATA } from '../engine/turkeyRates';
+
+interface AiAdvisorCardProps {
+  comparison: AllStrategiesComparison;
+  activeResult: StrategyResult;
+  debts: DebtItem[];
+  paidMonthsCount: number;
+  skippedMonthsCount: number;
+  totalActualPaid: number;
+}
 
 interface ChatMessage {
   id: string;
   role: 'user' | 'model';
   text: string;
-  timestamp: string;
 }
 
-interface AiAdvisorCardProps {
-  debt: number;
-  income: number;
-  monthlyInterestRate: number;
-  debtsList: DebtItem[];
-}
+const QUICK_QUESTIONS = [
+  'En mantıklı borç kapatma planı hangisi?',
+  'Önce hangi borcu kapatmalıyım?',
+  'Aylık bütçem yeterli mi?',
+  'Bütçemi 2.000 TL artırırsam ne kadar sürede borçsuz kalırım?',
+  'Asgari ödeme yaparsam toplam ne kadar zarar ederim?',
+  'Borç yapılandırması mantıklı mı?',
+  'En yüksek faiz yükü hangi borçta?',
+  'Ödeme planımı nasıl daha verimli hale getirebilirim?',
+];
 
 export const AiAdvisorCard: React.FC<AiAdvisorCardProps> = ({
-  debt,
-  income,
-  monthlyInterestRate,
-  debtsList,
+  comparison,
+  activeResult,
+  debts,
+  paidMonthsCount,
+  skippedMonthsCount,
+  totalActualPaid,
 }) => {
-  const formattedDebt = debt.toLocaleString('tr-TR');
-  const formattedPayable = income.toLocaleString('tr-TR');
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'welcome',
+      role: 'model',
+      text: `Merhaba! Hesaplama motorunuzdaki güncel verileri inceledim. Toplam **${formatCurrencyTR(comparison.totalDebt)}** borcunuz ve **${formatCurrencyTR(comparison.monthlyBudget)}** aylık bütçeniz için hangi stratejinin size daha avantajlı olduğunu veya ödeme planınızı nasıl hızlandırabileceğinizi sorabilirsiniz.`,
+    },
+  ]);
 
-  const getInitialMessage = (): ChatMessage => ({
-    id: 'welcome',
-    role: 'model',
-    text: `Merhaba! ${formattedDebt} ₺ toplam borcunuz ve aylık ${formattedPayable} ₺ ödeyebileceğiniz bütçeniz için buradayım. Borcunuzu en hızlı nasıl kapatabileceğinizi, hangi karttan başlamanız gerektiğini veya aklınıza takılan herhangi bir finansal konuyu sorabilirsiniz.`,
-    timestamp: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-  });
-
-  const [messages, setMessages] = useState<ChatMessage[]>([getInitialMessage()]);
-  const [inputText, setInputText] = useState('');
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // Scoped scroll inside chat box ONLY — never scrolls the outer browser window
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const shouldScrollChatRef = useRef<boolean>(false);
+  const shouldScrollChatRef = useRef(false);
 
   useEffect(() => {
-    if (!shouldScrollChatRef.current) return;
-    const container = chatContainerRef.current;
-    if (container) {
-      container.scrollTo({
-        top: container.scrollHeight,
+    if (shouldScrollChatRef.current && chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
         behavior: 'smooth',
       });
+      shouldScrollChatRef.current = false;
     }
-    shouldScrollChatRef.current = false;
   }, [messages, isLoading]);
 
-  useEffect(() => {
-    setMessages((prev) => {
-      if (prev.length === 1 && prev[0].id === 'welcome') {
-        return [getInitialMessage()];
-      }
-      return prev;
-    });
-  }, [debt, income, monthlyInterestRate]);
+  const handleSend = async (questionText?: string) => {
+    const textToSend = (questionText ?? input).trim();
+    if (!textToSend || isLoading) return;
 
-  const handleSendMessage = async (textToSend?: string) => {
-    const rawText = textToSend !== undefined ? textToSend : inputText;
-    const trimmed = rawText.trim();
-    if (!trimmed || isLoading) return;
-
-    if (debt <= 0) {
-      setError('Lütfen önce borç tutarınızı girin.');
-      return;
-    }
-
-    setError(null);
-    const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
+    const userMsg: ChatMessage = {
+      id: `u-${Date.now()}`,
       role: 'user',
-      text: trimmed,
-      timestamp: nowTime,
+      text: textToSend,
     };
 
-    const updatedMessages = [...messages, userMessage];
+    const nextHistory = [...messages, userMsg];
     shouldScrollChatRef.current = true;
-    setMessages(updatedMessages);
-    setInputText('');
+    setMessages(nextHistory);
+    if (!questionText) setInput('');
     setIsLoading(true);
 
     try {
-      const apiHistory = updatedMessages
-        .slice(1, -1)
-        .map((m) => ({
-          role: m.role,
-          text: m.text,
-        }));
-
-      const response = await fetch('/api/ai-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: trimmed,
-          history: apiHistory,
-          income,
-          debt,
-          monthlyInterestRate,
-          debtsList,
-        }),
-      });
-
-      const textResponse = await response.text();
-      let data: any;
-      try {
-        data = JSON.parse(textResponse);
-      } catch {
-        throw new Error('Sunucu API servisine ulaşılamadı. Vercel projenize güncel GitHub kodlarını yüklediğinizden ve Settings > Environment Variables bölümüne GEMINI_API_KEY eklediğinizden emin olun.');
-      }
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Yapay zeka yanıt veremedi.');
-      }
-
-      const botMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'model',
-        text: data.reply,
-        timestamp: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+      const payload = {
+        message: textToSend,
+        history: messages
+          .filter((m) => m.id !== 'welcome')
+          .map((m) => ({ role: m.role, text: m.text })),
+        monthlyBudget: comparison.monthlyBudget,
+        totalDebt: comparison.totalDebt,
+        tariffLabel: TARIFF_METADATA[comparison.tariffPeriod].label,
+        calculationMode: 'fixed',
+        activeStrategy: {
+          strategy: activeResult.strategy,
+          label: activeResult.label,
+          isPayable: activeResult.isPayable,
+          monthsToPayoff: activeResult.monthsToPayoff,
+          estimatedPayoffDate: activeResult.estimatedPayoffDate,
+          minimumRequiredFirstMonth: activeResult.minimumRequiredFirstMonth,
+          firstMonthPayment: activeResult.firstMonthPayment,
+          budgetShortfallFirstMonth: activeResult.budgetShortfallFirstMonth,
+          totalInterestAndTaxes: activeResult.totalInterestAndTaxes,
+          totalPaid: activeResult.totalPaid,
+          interestSavedVsMinimum: activeResult.interestSavedVsMinimum,
+        },
+        allStrategiesSummary: (['minimum', 'fast_budget', 'snowball', 'avalanche', 'custom'] as StrategyType[]).map(
+          (st) => {
+            const s = comparison.strategies[st];
+            return {
+              strategy: s.strategy,
+              label: s.label,
+              isPayable: s.isPayable,
+              monthsToPayoff: s.monthsToPayoff,
+              estimatedPayoffDate: s.estimatedPayoffDate,
+              firstMonthPayment: s.firstMonthPayment,
+              totalInterestAndTaxes: s.totalInterestAndTaxes,
+              totalPaid: s.totalPaid,
+              interestSavedVsMinimum: s.interestSavedVsMinimum,
+            };
+          }
+        ),
+        debts: debts
+          .filter((d) => !d.isPaidOff && d.balance > 0)
+          .map((d) => ({
+            name: d.name,
+            type: d.type,
+            typeLabel: DEBT_TYPE_META[d.type].label,
+            balance: d.balance,
+            contractualRate: d.contractualRate,
+            overdueRate: d.overdueRate,
+            bsmvRate: d.bsmvRate,
+            kkdfRate: d.kkdfRate,
+            minPaymentRate: d.minPaymentRate,
+            isOverdue: d.isOverdue,
+            overdueDays: d.overdueDays,
+            rateSource: d.rateSource,
+          })),
+        restructureResult: comparison.restructureResult,
+        actualSummary: {
+          paidMonthsCount,
+          skippedMonthsCount,
+          totalActualPaid,
+        },
       };
 
+      const res = await fetch('/api/ai-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const rawText = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        throw new Error('Sunucudan geçerli bir yanıt alınamadı.');
+      }
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || 'Danışman yanıt veremedi.');
+      }
+
       shouldScrollChatRef.current = true;
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `m-${Date.now()}`,
+          role: 'model',
+          text: data.reply,
+        },
+      ]);
     } catch (err: any) {
-      console.error(err);
-      setError(err?.message || 'Bağlantı hatası oluştu. Lütfen tekrar deneyin.');
+      shouldScrollChatRef.current = true;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          role: 'model',
+          text: err?.message || 'Bağlantı sırasında bir sorun oluştu. Lütfen tekrar deneyin.',
+        },
+      ]);
     } finally {
       setIsLoading(false);
-      inputRef.current?.focus();
     }
   };
 
-  const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const renderFormattedText = (text: string) => {
+    return text.split('\n').map((line, i) => {
+      const parts = line.split(/(\*\*.*?\*\*)/g);
+      return (
+        <p key={i} className={line.trim() === '' ? 'h-2' : 'leading-relaxed'}>
+          {parts.map((part, j) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return (
+                <strong key={j} className="font-semibold text-slate-900">
+                  {part.slice(2, -2)}
+                </strong>
+              );
+            }
+            return <span key={j}>{part}</span>;
+          })}
+        </p>
+      );
+    });
   };
-
-  const handleResetChat = () => {
-    setMessages([getInitialMessage()]);
-    setError(null);
-    setInputText('');
-  };
-
-  const quickQuestions = [
-    'Borcumu en hızlı nasıl kapatırım?',
-    'Aylık ödeyebileceğim tutar yeterli mi?',
-    'Kredi kartlarını mı krediyi mi önce kapatmalıyım?',
-    'Borçları tek bir kredide toplamak mantıklı mı?',
-  ];
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+    <section id="danisman" className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
         <div>
-          <h2 className="text-sm font-bold text-gray-900">
-            AI Danışmanı
+          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            Yapay Zekâ Finans Danışmanı
           </h2>
-          <p className="text-xs text-gray-500">
-            Borç ve bütçenize göre anlık finansal sorularınızı yanıtlar
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Yalnızca yukarıdaki hesaplama motorunuzun ürettiği gerçek veriler üzerinden yorum yapar; hayali faiz veya tasarruf üretmez.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={handleResetChat}
-          className="text-xs text-gray-500 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200 transition flex items-center gap-1 cursor-pointer"
-          title="Sohbeti temizle"
-        >
-          <RotateCcw className="w-3 h-3" />
-          <span>Temizle</span>
-        </button>
       </div>
 
-      {/* Quick Suggestion Chips */}
-      <div className="px-5 py-2 bg-gray-50 border-b border-gray-100 overflow-x-auto">
-        <div className="flex items-center gap-1.5 min-w-max">
-          <span className="text-[11px] text-gray-400 font-medium">Hızlı Sor:</span>
-          {quickQuestions.map((q, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleSendMessage(q)}
-              disabled={isLoading || debt <= 0}
-              className="text-xs text-gray-600 hover:text-gray-900 bg-white hover:bg-gray-100 px-2.5 py-1 rounded-md border border-gray-200 transition cursor-pointer disabled:opacity-50"
-            >
-              {q}
-            </button>
-          ))}
-        </div>
+      {/* 8 Quick Questions */}
+      <div className="flex flex-wrap gap-1.5">
+        {QUICK_QUESTIONS.map((q) => (
+          <button
+            key={q}
+            type="button"
+            disabled={isLoading}
+            onClick={() => handleSend(q)}
+            className="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-left"
+          >
+            {q}
+          </button>
+        ))}
       </div>
 
-      {/* Chat Messages */}
+      {/* Chat Messages Area */}
       <div
         ref={chatContainerRef}
-        className="p-4 sm:p-5 space-y-3 min-h-[280px] max-h-[460px] overflow-y-auto bg-gray-50/40"
+        className="h-80 sm:h-96 overflow-y-auto border border-slate-200 rounded-lg bg-slate-50/50 p-3.5 sm:p-4 space-y-3"
       >
-        {messages.map((msg) => {
-          const isUser = msg.role === 'user';
-          return (
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex items-start gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            {msg.role === 'model' && (
+              <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 mt-0.5">
+                <Bot className="w-4 h-4" />
+              </div>
+            )}
             <div
-              key={msg.id}
-              className={`flex items-start gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
+              className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm space-y-1 ${
+                msg.role === 'user'
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-white border border-slate-200 text-slate-800'
+              }`}
             >
-              <div
-                className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 text-xs font-medium ${
-                  isUser
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-200 text-gray-700'
-                }`}
-              >
-                {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
-              </div>
-
-              <div className={`max-w-[85%] sm:max-w-[78%] space-y-1 ${isUser ? 'items-end' : 'items-start'}`}>
-                <div
-                  className={`p-3 rounded-xl text-xs sm:text-sm leading-relaxed ${
-                    isUser
-                      ? 'bg-gray-900 text-white rounded-tr-none'
-                      : 'bg-white border border-gray-200 text-gray-800 rounded-tl-none shadow-xs'
-                  }`}
-                >
-                  <div className="whitespace-pre-line font-sans">
-                    {msg.text}
-                  </div>
-                </div>
-
-                <div className={`flex items-center gap-1.5 text-[10px] text-gray-400 px-1 ${isUser ? 'justify-end' : 'justify-start'}`}>
-                  <span>{msg.timestamp}</span>
-                  {!isUser && (
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(msg.id, msg.text)}
-                      className="text-gray-400 hover:text-gray-600 transition cursor-pointer"
-                      title="Kopyala"
-                    >
-                      {copiedId === msg.id ? (
-                        <span className="text-emerald-600 flex items-center gap-0.5 font-medium">
-                          <Check className="w-2.5 h-2.5" /> Kopyalandı
-                        </span>
-                      ) : (
-                        <Copy className="w-2.5 h-2.5" />
-                      )}
-                    </button>
-                  )}
-                </div>
-              </div>
+              {msg.role === 'user' ? <p>{msg.text}</p> : renderFormattedText(msg.text)}
             </div>
-          );
-        })}
+            {msg.role === 'user' && (
+              <div className="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+                <User className="w-4 h-4" />
+              </div>
+            )}
+          </div>
+        ))}
 
         {isLoading && (
-          <div className="flex items-start gap-2">
-            <div className="w-6 h-6 rounded-md bg-gray-200 text-gray-700 flex items-center justify-center shrink-0">
-              <Bot className="w-3.5 h-3.5" />
-            </div>
-            <div className="p-3 rounded-xl rounded-tl-none bg-white border border-gray-200 text-gray-500 text-xs flex items-center gap-2">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-500" />
-              <span>Yanıt hazırlanıyor...</span>
-            </div>
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Motor verileriniz analiz ediliyor...</span>
           </div>
         )}
-
-        {error && (
-          <div className="p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-            <AlertCircle className="w-3.5 h-3.5 shrink-0 text-red-500" />
-            <span>{error}</span>
-          </div>
-        )}
-
       </div>
 
-      {/* Input */}
-      <div className="p-3 sm:p-4 bg-white border-t border-gray-100">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSendMessage();
-          }}
-          className="relative flex items-center gap-2"
+      {/* Chat Input Form */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSend();
+        }}
+        className="flex items-center gap-2"
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Borç planınız hakkında bir soru sorun..."
+          disabled={isLoading}
+          className="flex-1 px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-900 min-h-[44px]"
+        />
+        <button
+          type="submit"
+          disabled={isLoading || !input.trim()}
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 disabled:opacity-40 rounded-lg transition-colors cursor-pointer min-h-[44px]"
         >
-          <input
-            ref={inputRef}
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Bir soru yazın..."
-            disabled={isLoading}
-            className="w-full bg-white border border-gray-300 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 rounded-lg py-2.5 pl-3.5 pr-10 text-xs sm:text-sm text-gray-900 placeholder-gray-400 outline-none transition disabled:opacity-50"
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !inputText.trim() || debt <= 0}
-            className="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-gray-900 hover:bg-black disabled:opacity-40 text-white rounded-md transition flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
-            title="Gönder"
-          >
-            {isLoading ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Send className="w-3.5 h-3.5" />
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
+          <Send className="w-4 h-4" />
+          <span className="hidden sm:inline">Gönder</span>
+        </button>
+      </form>
+    </section>
   );
 };
